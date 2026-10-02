@@ -1,3 +1,5 @@
+
+
 const roles = [
     "DevOps Engineer",
     "Cloud Engineer",
@@ -10,50 +12,34 @@ let roleIndex = 0;
 let characterIndex = 0;
 let deleting = false;
 
-
 function typeEffect() {
-
     const currentRole = roles[roleIndex];
 
     if (!deleting) {
-
         typingElement.textContent =
             currentRole.substring(0, characterIndex + 1);
 
         characterIndex++;
 
         if (characterIndex === currentRole.length) {
-
             deleting = true;
 
             setTimeout(typeEffect, 1500);
-
             return;
         }
-
     } else {
-
         typingElement.textContent =
             currentRole.substring(0, characterIndex - 1);
 
         characterIndex--;
 
         if (characterIndex === 0) {
-
             deleting = false;
-
-            roleIndex++;
-
-            if (roleIndex === roles.length) {
-                roleIndex = 0;
-            }
+            roleIndex = (roleIndex + 1) % roles.length;
         }
     }
 
-    setTimeout(
-        typeEffect,
-        deleting ? 50 : 100
-    );
+    setTimeout(typeEffect, deleting ? 50 : 100);
 }
 
 typeEffect();
@@ -67,39 +53,23 @@ const menuBtn = document.getElementById("menuBtn");
 const navLinks = document.getElementById("navLinks");
 
 menuBtn.addEventListener("click", () => {
-
     navLinks.classList.toggle("active");
 
     const icon = menuBtn.querySelector("i");
 
-    if (navLinks.classList.contains("active")) {
-
-        icon.classList.remove("fa-bars");
-        icon.classList.add("fa-xmark");
-
-    } else {
-
-        icon.classList.remove("fa-xmark");
-        icon.classList.add("fa-bars");
-    }
+    icon.classList.toggle("fa-bars");
+    icon.classList.toggle("fa-xmark");
 });
 
-
-/* Close menu when clicking link */
-
 document.querySelectorAll(".nav-links a").forEach(link => {
-
     link.addEventListener("click", () => {
-
         navLinks.classList.remove("active");
 
         const icon = menuBtn.querySelector("i");
 
         icon.classList.remove("fa-xmark");
         icon.classList.add("fa-bars");
-
     });
-
 });
 
 
@@ -108,42 +78,30 @@ document.querySelectorAll(".nav-links a").forEach(link => {
 ========================= */
 
 const themeBtn = document.getElementById("themeBtn");
+const themeIcon = themeBtn.querySelector("i");
+
+function setTheme(theme) {
+    document.body.classList.toggle("light", theme === "light");
+
+    themeIcon.classList.toggle("fa-moon", theme !== "light");
+    themeIcon.classList.toggle("fa-sun", theme === "light");
+
+    localStorage.setItem("theme", theme);
+}
 
 themeBtn.addEventListener("click", () => {
+    const currentTheme =
+        document.body.classList.contains("light")
+            ? "light"
+            : "dark";
 
-    document.body.classList.toggle("light");
-
-    const icon = themeBtn.querySelector("i");
-
-    if (document.body.classList.contains("light")) {
-
-        icon.classList.remove("fa-moon");
-        icon.classList.add("fa-sun");
-
-        localStorage.setItem("theme", "light");
-
-    } else {
-
-        icon.classList.remove("fa-sun");
-        icon.classList.add("fa-moon");
-
-        localStorage.setItem("theme", "dark");
-    }
+    setTheme(currentTheme === "light" ? "dark" : "light");
 });
-
-
-/* Load saved theme */
 
 const savedTheme = localStorage.getItem("theme");
 
 if (savedTheme === "light") {
-
-    document.body.classList.add("light");
-
-    const icon = themeBtn.querySelector("i");
-
-    icon.classList.remove("fa-moon");
-    icon.classList.add("fa-sun");
+    setTheme("light");
 }
 
 
@@ -154,17 +112,15 @@ if (savedTheme === "light") {
 const contactForm = document.getElementById("contactForm");
 const formMessage = document.getElementById("formMessage");
 
-contactForm.addEventListener("submit", function(event) {
-
+contactForm.addEventListener("submit", event => {
     event.preventDefault();
 
-    const name = document.getElementById("name").value;
+    const name = document.getElementById("name").value.trim();
 
     formMessage.textContent =
         `Thanks ${name}! Your message has been received.`;
 
     contactForm.reset();
-
 });
 
 
@@ -174,3 +130,4 @@ contactForm.addEventListener("submit", function(event) {
 
 document.getElementById("year").textContent =
     new Date().getFullYear();
+```
